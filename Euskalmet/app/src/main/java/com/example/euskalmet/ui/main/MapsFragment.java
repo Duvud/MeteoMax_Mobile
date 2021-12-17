@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.euskalmet.Location.LocationRequest;
+import com.example.euskalmet.Location.LocationViewModel;
 import com.example.euskalmet.R;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
@@ -25,9 +27,11 @@ import java.util.List;
 
 public class MapsFragment extends Fragment {
     private StationViewModel stationViewModel;
+    private LocationViewModel locationViewModel;
     private MeteoController meteoController;
     private GoogleMap googleMap;
     private List<Station> stationList;
+    private LocationRequest locationRequest;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -58,7 +62,17 @@ public class MapsFragment extends Fragment {
     }
 
     public void initViewModel() {
+        locationRequest = LocationRequest.getLocationRequest(getContext());
         meteoController = MeteoController.getMeteoController(getContext());
+        locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
+        locationViewModel.setLocationRequest(this.locationRequest);
+        final Observer<List<Double>> locationObserver = new Observer<List<Double>>() {
+            @Override
+            public void onChanged(List<Double> doubles) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(doubles.get(0), doubles.get(1)), 11.0f));
+            }
+        };
+        locationViewModel.getLocation().observe(getViewLifecycleOwner(), locationObserver);
         stationViewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
         stationViewModel.setMeteoController(this.meteoController);
         final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
@@ -78,7 +92,13 @@ public class MapsFragment extends Fragment {
             LatLng newMarker = new LatLng(currentStation.getY(),currentStation.getX());
             googleMap.addMarker(new MarkerOptions().position(newMarker).title(currentStation.getName()));
         }
-        Station lastStation = stationList.get(stationList.size()-1);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastStation.getY(),lastStation.getX()), 12.0f));
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!locationRequest.locationInited) {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.0345685061911, -2.417053097254997), 8.0f));
+        }
     }
 }
