@@ -1,6 +1,7 @@
 package com.example.euskalmet.ui.main;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public void updateMessageList(List<Station> messageList){
+        Log.d("","Updating station list");
         this.stationList = messageList;
         notifyDataSetChanged();
     }
@@ -66,7 +68,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = layoutInflater.from(viewGroup.getContext()).inflate(R.layout.station_list_fragment,viewGroup, false);
+        View view = layoutInflater.from(viewGroup.getContext()).inflate(R.layout.frame_station,viewGroup, false);
         view.setOnClickListener(this);
         return new ViewHolder(view);
     }

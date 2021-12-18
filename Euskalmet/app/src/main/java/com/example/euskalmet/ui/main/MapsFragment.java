@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.euskalmet.Location.LocationRequest;
+import com.example.euskalmet.Location.LocationController;
 import com.example.euskalmet.Location.LocationViewModel;
 import com.example.euskalmet.R;
 import com.example.euskalmet.Room.Entity.Station;
@@ -31,7 +31,7 @@ public class MapsFragment extends Fragment {
     private MeteoController meteoController;
     private GoogleMap googleMap;
     private List<Station> stationList;
-    private LocationRequest locationRequest;
+    private LocationController locationController;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -62,10 +62,10 @@ public class MapsFragment extends Fragment {
     }
 
     public void initViewModel() {
-        locationRequest = LocationRequest.getLocationRequest(getContext());
+        locationController = LocationController.getLocationRequest(getContext());
         meteoController = MeteoController.getMeteoController(getContext());
         locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
-        locationViewModel.setLocationRequest(this.locationRequest);
+        locationViewModel.setLocationRequest(this.locationController);
         final Observer<List<Double>> locationObserver = new Observer<List<Double>>() {
             @Override
             public void onChanged(List<Double> doubles) {
@@ -79,8 +79,6 @@ public class MapsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
                 MapsFragment.this.stationList = stationList;
-                System.out.println("Size from maps fragment inside class");
-                System.out.println(MapsFragment.this.stationList.size());
             }
         };
         stationViewModel.getStations().observe(getViewLifecycleOwner(), stationListObserver);
@@ -92,12 +90,7 @@ public class MapsFragment extends Fragment {
             LatLng newMarker = new LatLng(currentStation.getY(),currentStation.getX());
             googleMap.addMarker(new MarkerOptions().position(newMarker).title(currentStation.getName()));
         }
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (!locationRequest.locationInited) {
+        if (!locationController.locationInited) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.0345685061911, -2.417053097254997), 8.0f));
         }
     }

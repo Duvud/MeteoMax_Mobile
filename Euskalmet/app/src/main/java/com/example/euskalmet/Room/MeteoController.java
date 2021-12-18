@@ -54,7 +54,6 @@ public class MeteoController {
         return liveStationList;
     }
 
-
     public void saveStations(List<Station> stationList) {
         HandlerThread insertHandlerThread = new HandlerThread("InsertHandlerThread");
         insertHandlerThread.start();

@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 
-public class LocationRequest implements LocationListener {
+public class LocationController implements LocationListener {
     @SuppressLint("StaticFieldLeak")
-    private static LocationRequest locationRequest;
+    private static LocationController locationController;
     private static final String[] INITIAL_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_CONTACTS
@@ -24,7 +24,7 @@ public class LocationRequest implements LocationListener {
     public double latitude, longitude;
     public boolean locationInited = false;
 
-    public LocationRequest(Context context) {
+    public LocationController(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity) context, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0);
@@ -33,11 +33,11 @@ public class LocationRequest implements LocationListener {
         }
     }
 
-    public static LocationRequest getLocationRequest(Context context) {
-        if(locationRequest == null) {
-            locationRequest = new LocationRequest(context);
+    public static LocationController getLocationRequest(Context context) {
+        if(locationController == null) {
+            locationController = new LocationController(context);
         }
-        return  locationRequest;
+        return locationController;
     }
 
     @Override
