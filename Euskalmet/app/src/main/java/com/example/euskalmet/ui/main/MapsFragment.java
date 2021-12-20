@@ -34,7 +34,6 @@ public class MapsFragment extends Fragment {
     private LocationController locationController;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
         @Override
         public void onMapReady(GoogleMap googleMap) {
             MapsFragment.this.googleMap = googleMap;
