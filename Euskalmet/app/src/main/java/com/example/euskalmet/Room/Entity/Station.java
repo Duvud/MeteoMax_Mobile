@@ -27,6 +27,10 @@ public class Station {
     public String municipality;
 
     @NonNull
+    @ColumnInfo(name = "enabled", defaultValue = "false")
+    public Boolean enabled;
+
+    @NonNull
     public String getId() {
         return id;
     }

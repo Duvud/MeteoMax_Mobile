@@ -1,6 +1,8 @@
 package com.example.euskalmet.ui.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -61,9 +63,6 @@ public class StationListFragment extends Fragment {
         final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
-                System.out.println("Size from fragment");
-                System.out.println(stationList.size());
-                StationListFragment.this.stationList = stationList;
                 recyclerAdapter.updateMessageList(stationList);
             }
         };

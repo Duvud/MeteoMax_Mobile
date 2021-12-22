@@ -1,5 +1,7 @@
 package com.example.euskalmet.ui.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,19 +21,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment  {
     private StationViewModel stationViewModel;
     private LocationViewModel locationViewModel;
     private MeteoController meteoController;
     private GoogleMap googleMap;
     private List<Station> stationList;
     private LocationController locationController;
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -69,6 +73,7 @@ public class MapsFragment extends Fragment {
             @Override
             public void onChanged(List<Double> doubles) {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(doubles.get(0), doubles.get(1)), 11.0f));
+                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).position(new LatLng(doubles.get(0), doubles.get(1))).title("Tú"));
             }
         };
         locationViewModel.getLocation().observe(getViewLifecycleOwner(), locationObserver);
@@ -78,19 +83,24 @@ public class MapsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
                 MapsFragment.this.stationList = stationList;
+                addMarkers(stationList);
             }
         };
         stationViewModel.getStations().observe(getViewLifecycleOwner(), stationListObserver);
     }
 
     public void addMarkers(List<Station> stationList) {
-        for(int i=0; i< stationList.size(); i++) {
-            Station currentStation = stationList.get(i);
-            LatLng newMarker = new LatLng(currentStation.getY(),currentStation.getX());
-            googleMap.addMarker(new MarkerOptions().position(newMarker).title(currentStation.getName()));
-        }
-        if (!locationController.locationInited) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.0345685061911, -2.417053097254997), 8.0f));
+        if(stationList != null){
+            for(int i=0; i< stationList.size(); i++) {
+                Station currentStation = stationList.get(i);
+                LatLng newMarker = new LatLng(currentStation.getY(),currentStation.getX());
+                googleMap.addMarker(new MarkerOptions().position(newMarker).title(currentStation.getName()));
+            }
+            if (!locationController.locationInited) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.0345685061911, -2.417053097254997), 8.0f));
+            }
         }
     }
+
+
 }

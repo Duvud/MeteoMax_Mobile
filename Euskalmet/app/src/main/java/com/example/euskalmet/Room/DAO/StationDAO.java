@@ -13,11 +13,14 @@ import java.util.List;
 @Dao
 public interface StationDAO {
     @Query("SELECT * FROM station")
-    List<Station> getStations();
-
-    @Query("SELECT * FROM station")
     LiveData<List<Station>> getLiveStations();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStations(List<Station> stationList);
+
+    @Query("SELECT * FROM station WHERE id = :stationID")
+    LiveData<Station> getLiveStation(String stationID);
+
+    @Query("UPDATE station SET enabled = :enabled WHERE id =:stationID")
+    void changeStationEnabled(String stationID, Boolean enabled);
 }

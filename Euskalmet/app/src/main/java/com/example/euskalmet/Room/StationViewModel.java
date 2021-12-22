@@ -22,6 +22,7 @@ public class StationViewModel extends AndroidViewModel {
         this.meteoController = meteoController;
     }
 
+
     public LiveData<List<Station>> getStations() {
         stationList = meteoController.getLiveStations();
         if(stationList.getValue() != null && stationList.getValue().size() == 0){

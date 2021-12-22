@@ -29,11 +29,11 @@ public class ServerRequest {
     private Context mainContext;
     private MeteoController meteoController;
 
-    public ServerRequest(Context mainContext) {
+    public ServerRequest(Context mainContext, List<Station> oldStationList) {
         this.mainContext = mainContext;
         meteoController = MeteoController.getMeteoController(this.mainContext);
         requestQueue = Volley.newRequestQueue(this.mainContext);
-        dataParser = new DataParser(this.mainContext);
+        dataParser = new DataParser(this.mainContext, oldStationList);
     }
 
     public void getStationList() {

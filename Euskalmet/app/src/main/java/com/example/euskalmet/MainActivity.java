@@ -2,10 +2,12 @@ package com.example.euskalmet;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import com.example.euskalmet.EuskalmetData.ServerRequest;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
 import com.example.euskalmet.Room.StationViewModel;
+import com.example.euskalmet.ui.main.MapsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.lifecycle.Observer;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private StationViewModel stationViewModel;
     private MeteoController meteoController;
     private List<Station> stationList;
+    private boolean listenInited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,20 @@ public class MainActivity extends AppCompatActivity {
         meteoController = MeteoController.getMeteoController(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        serverRequest = new ServerRequest(this);
-        serverRequest.getStationList();
+        stationViewModel = new ViewModelProvider(this).get(StationViewModel.class);
+        stationViewModel.setMeteoController(this.meteoController);
+        final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
+            @Override
+            public void onChanged(@Nullable final List<Station> stationList) {
+                if(!listenInited){
+                    serverRequest = new ServerRequest(MainActivity.this, stationList);
+                    System.out.println(stationList.size() + " size from main activity");
+                    serverRequest.getStationList();
+                    listenInited = true;
+                }
+            }
+        };
+        stationViewModel.getStations().observe(this, stationListObserver);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);

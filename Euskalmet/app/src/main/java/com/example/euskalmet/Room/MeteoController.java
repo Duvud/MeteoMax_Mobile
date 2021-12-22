@@ -18,6 +18,7 @@ public class MeteoController {
     @SuppressLint("StaticFieldLeak")
     private static MeteoController meteoController;
     private LiveData<List<Station>> liveStationList;
+    private LiveData<Station> liveStation;
     private StationDAO stationDAO;
 
     private MeteoController(Context context) {
@@ -54,6 +55,7 @@ public class MeteoController {
         return liveStationList;
     }
 
+
     public void saveStations(List<Station> stationList) {
         HandlerThread insertHandlerThread = new HandlerThread("InsertHandlerThread");
         insertHandlerThread.start();
@@ -66,4 +68,21 @@ public class MeteoController {
             }
         });
     }
+
+
+    public void changeEnabled(String stationId, Boolean enabled) {
+        HandlerThread updateHandlerThread = new HandlerThread("UpdateHandlerThread");
+        updateHandlerThread.start();
+        Looper updateLooper = updateHandlerThread.getLooper();
+        Handler insertHandler = new Handler(updateLooper);
+        insertHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                stationDAO.changeStationEnabled(stationId,enabled);
+            }
+        });
+
+    }
+
+
 }
