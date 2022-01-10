@@ -21,17 +21,20 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 
+import java.util.HashMap;
 import java.util.List;
 
+import static java.sql.DriverManager.println;
 
-public class MapsFragment extends Fragment  {
+
+public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickListener  {
     private StationViewModel stationViewModel;
     private LocationViewModel locationViewModel;
     private MeteoController meteoController;
+    private HashMap<String, String> stationIDs = new HashMap<>();
+    private MarkerOptions locationMarker;
     private GoogleMap googleMap;
     private List<Station> stationList;
     private LocationController locationController;
@@ -42,8 +45,17 @@ public class MapsFragment extends Fragment  {
         public void onMapReady(GoogleMap googleMap) {
             MapsFragment.this.googleMap = googleMap;
             MapsFragment.this.addMarkers(MapsFragment.this.stationList);
+            MapsFragment.this.googleMap.setOnMarkerClickListener(MapsFragment.this);
         }
     };
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        String stationId = stationIDs.get(marker.getTitle());
+        System.out.println(stationId);
+        return false;
+    }
 
     @Nullable
     @Override
@@ -73,7 +85,8 @@ public class MapsFragment extends Fragment  {
             @Override
             public void onChanged(List<Double> doubles) {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(doubles.get(0), doubles.get(1)), 11.0f));
-                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).position(new LatLng(doubles.get(0), doubles.get(1))).title("Tú"));
+                locationMarker = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).position(new LatLng(doubles.get(0), doubles.get(1))).title("Tú");
+                googleMap.addMarker(locationMarker);
             }
         };
         locationViewModel.getLocation().observe(getViewLifecycleOwner(), locationObserver);
@@ -82,6 +95,7 @@ public class MapsFragment extends Fragment  {
         final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
+                googleMap.clear();
                 MapsFragment.this.stationList = stationList;
                 addMarkers(stationList);
             }
@@ -94,13 +108,18 @@ public class MapsFragment extends Fragment  {
             for(int i=0; i< stationList.size(); i++) {
                 Station currentStation = stationList.get(i);
                 LatLng newMarker = new LatLng(currentStation.getY(),currentStation.getX());
-                googleMap.addMarker(new MarkerOptions().position(newMarker).title(currentStation.getName()));
+                BitmapDescriptor markerColor = currentStation.enabled ?
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN) :
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+                googleMap.addMarker(new MarkerOptions().icon(markerColor).position(newMarker).title(currentStation.getName()));
+                stationIDs.put(currentStation.getName(), currentStation.getId());
+            }
+            if(locationMarker != null){
+                googleMap.addMarker(locationMarker);
             }
             if (!locationController.locationInited) {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.0345685061911, -2.417053097254997), 8.0f));
             }
         }
     }
-
-
 }
