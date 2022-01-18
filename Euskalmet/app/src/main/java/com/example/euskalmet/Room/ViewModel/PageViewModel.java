@@ -1,4 +1,4 @@
-package com.example.euskalmet.ui.main;
+package com.example.euskalmet.Room.ViewModel;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

@@ -1,8 +1,6 @@
 package com.example.euskalmet.ui.main;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -17,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.euskalmet.R;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
-import com.example.euskalmet.Room.StationViewModel;
+import com.example.euskalmet.Room.ViewModel.StationViewModel;
+import com.example.euskalmet.ui.main.recyclerAdapter.StationListRecyclerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class StationListFragment extends Fragment {
     private Context mainContext;
     private MeteoController meteoController;
     List<Station> stationList = new ArrayList<>();
-    RecyclerAdapter recyclerAdapter;
+    StationListRecyclerAdapter stationListRecyclerAdapter;
     RecyclerView recyclerView;
 
     StationListFragment(Context mainContext) {
@@ -49,10 +48,10 @@ public class StationListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerAdapter = new RecyclerAdapter(view.getContext(), this.stationList);
+        stationListRecyclerAdapter = new StationListRecyclerAdapter(view.getContext(), this.stationList);
         recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(),LinearLayoutManager.VERTICAL,false));
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setAdapter(stationListRecyclerAdapter);
         recyclerView.setHasFixedSize(true);
         initViewModel();
     }
@@ -63,7 +62,7 @@ public class StationListFragment extends Fragment {
         final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
-                recyclerAdapter.updateMessageList(stationList);
+                stationListRecyclerAdapter.updateMessageList(stationList);
             }
         };
         stationViewModel.getStations().observe(getViewLifecycleOwner(), stationListObserver);

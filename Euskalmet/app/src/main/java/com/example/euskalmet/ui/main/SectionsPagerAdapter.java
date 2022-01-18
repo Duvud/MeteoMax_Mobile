@@ -24,6 +24,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        if(position == 0){
+            return new EnabledStationsFragment(mContext);
+        }
         if(position == 1){
             return new StationListFragment(mContext);
         }

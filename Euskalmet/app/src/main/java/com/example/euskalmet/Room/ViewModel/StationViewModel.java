@@ -1,4 +1,4 @@
-package com.example.euskalmet.Room;
+package com.example.euskalmet.Room.ViewModel;
 
 import android.app.Application;
 
@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.euskalmet.Room.Entity.Station;
+import com.example.euskalmet.Room.MeteoController;
 
 import java.util.List;
 
@@ -21,7 +22,6 @@ public class StationViewModel extends AndroidViewModel {
     public void setMeteoController(MeteoController meteoController) {
         this.meteoController = meteoController;
     }
-
 
     public LiveData<List<Station>> getStations() {
         stationList = meteoController.getLiveStations();

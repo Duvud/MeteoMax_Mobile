@@ -1,7 +1,5 @@
 package com.example.euskalmet.ui.main;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,7 +14,7 @@ import com.example.euskalmet.Location.LocationViewModel;
 import com.example.euskalmet.R;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
-import com.example.euskalmet.Room.StationViewModel;
+import com.example.euskalmet.Room.ViewModel.StationViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,14 +24,13 @@ import com.google.android.gms.maps.model.*;
 import java.util.HashMap;
 import java.util.List;
 
-import static java.sql.DriverManager.println;
 
-
-public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickListener  {
+public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener  {
     private StationViewModel stationViewModel;
     private LocationViewModel locationViewModel;
     private MeteoController meteoController;
     private HashMap<String, String> stationIDs = new HashMap<>();
+    private HashMap<String, Boolean> markerState = new HashMap<>();
     private MarkerOptions locationMarker;
     private GoogleMap googleMap;
     private List<Station> stationList;
@@ -46,12 +43,12 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
             MapsFragment.this.googleMap = googleMap;
             MapsFragment.this.addMarkers(MapsFragment.this.stationList);
             MapsFragment.this.googleMap.setOnMarkerClickListener(MapsFragment.this);
+            MapsFragment.this.googleMap.setOnInfoWindowClickListener(MapsFragment.this);
         }
     };
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         String stationId = stationIDs.get(marker.getTitle());
         System.out.println(stationId);
         return false;
@@ -95,7 +92,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
         final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
-                googleMap.clear();
+                if(googleMap != null)
+                    googleMap.clear();
                 MapsFragment.this.stationList = stationList;
                 addMarkers(stationList);
             }
@@ -113,6 +111,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
                         BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
                 googleMap.addMarker(new MarkerOptions().icon(markerColor).position(newMarker).title(currentStation.getName()));
                 stationIDs.put(currentStation.getName(), currentStation.getId());
+                markerState.put(currentStation.getName(), currentStation.enabled);
             }
             if(locationMarker != null){
                 googleMap.addMarker(locationMarker);
@@ -120,6 +119,21 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
             if (!locationController.locationInited) {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.0345685061911, -2.417053097254997), 8.0f));
             }
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        String stationId = stationIDs.get(marker.getTitle());
+        if(markerState.get(marker.getTitle()) == true){
+            markerState.put(marker.getTitle(), false);
+            meteoController.changeEnabled(stationId, false);
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+        }else if(markerState.get(marker.getTitle()) == false) {
+            markerState.put(marker.getTitle(), true);
+            meteoController.changeEnabled(stationId, true);
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         }
     }
 }
