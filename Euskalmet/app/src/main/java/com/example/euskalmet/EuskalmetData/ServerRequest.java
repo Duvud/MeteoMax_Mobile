@@ -36,8 +36,9 @@ public class ServerRequest {
         dataParser = new DataParser(this.mainContext, oldStationList);
     }
 
-    public static ServerRequest getServerRequest(Context context, List<Station> oldStationList) {
+    public static ServerRequest getServerRequest(Context context, List<Station> oldStationList, String origin) {
         if (serverRequest == null) {
+            System.out.println("PRIMERO " + origin  + " "  + oldStationList.size() );
             serverRequest = new ServerRequest(context, oldStationList);
         }
         return serverRequest;

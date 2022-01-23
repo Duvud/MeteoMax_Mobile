@@ -33,7 +33,7 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
         meteoController = MeteoController.getMeteoController(context);
         stationList = dataSet;
         this.context = context;
-        this.serverRequest = ServerRequest.getServerRequest(context, stationList);
+        this.serverRequest = ServerRequest.getServerRequest(context, stationList , "StationList");
     }
 
     @Override
@@ -64,11 +64,9 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
         public TextView getTextView() {
             return textView;
         }
-
         public ImageView getImageView() {
             return imageView;
         }
-
         public Switch getStationSwitch() {
             return stationSwitch;
         }
@@ -95,8 +93,8 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         if (stationList != null && stationList.get(position) != null && viewHolder.getTextView() != null) {
-            viewHolder.getTextView().setText(stationList.get(position).name);
             viewHolder.getStationSwitch().setChecked(stationList.get(position).enabled);
+            viewHolder.getTextView().setText(stationList.get(position).name);
             viewHolder.getStationSwitch().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -112,7 +110,6 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
                     }
                 }
             });
-            viewHolder.getStationSwitch().setChecked(stationList.get(position).enabled);
         }
     }
 

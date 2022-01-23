@@ -50,7 +50,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
     @Override
     public boolean onMarkerClick(Marker marker) {
         String stationId = stationIDs.get(marker.getTitle());
-        System.out.println(stationId);
         return false;
     }
 
@@ -102,7 +101,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
     }
 
     public void addMarkers(List<Station> stationList) {
-        if(stationList != null){
+        if(stationList != null && googleMap != null){
             for(int i=0; i< stationList.size(); i++) {
                 Station currentStation = stationList.get(i);
                 LatLng newMarker = new LatLng(currentStation.getY(),currentStation.getX());

@@ -44,18 +44,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
                 if(!listenInited){
-                    serverRequest = ServerRequest.getServerRequest(MainActivity.this, stationList);
-                    System.out.println(stationList.size() + " size from main activity");
+                    serverRequest = ServerRequest.getServerRequest(MainActivity.this, stationList, "Main Activity");
                     serverRequest.getStationList();
                     listenInited = true;
+                    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(MainActivity.this, getSupportFragmentManager());
+                    ViewPager viewPager = binding.viewPager;
+                    viewPager.setAdapter(sectionsPagerAdapter);
+                    TabLayout tabs = binding.tabs;
+                    tabs.setupWithViewPager(viewPager);
                 }
             }
         };
         stationViewModel.getStations().observe(this, stationListObserver);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = binding.viewPager;
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = binding.tabs;
-        tabs.setupWithViewPager(viewPager);
+
     }
 }

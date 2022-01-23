@@ -14,7 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private static final String[] TAB_TITLES = new String[]{"Readings","Stations","Nearest"};
+    private static final String[] TAB_TITLES = new String[]{"Map","Stations","Data"};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -25,15 +25,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if(position == 0){
-            return new EnabledStationsFragment(mContext);
+            return new MapsFragment();
         }
         if(position == 1){
             return new StationListFragment(mContext);
         }
         if(position == 2){
-            return new MapsFragment();
+            return new EnabledStationsFragment(mContext);
         }
-        return PlaceholderFragment.newInstance(position + 1);
+        return null;
     }
 
     @Nullable

@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.euskalmet.MainActivity;
 import com.example.euskalmet.R;
 import com.example.euskalmet.Room.Entity.Reading;
 import com.example.euskalmet.Room.Entity.Station;
@@ -65,14 +66,12 @@ public class EnabledStationsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
                 enabledStationsAdapter.updateEnabledStations(stationList);
-                System.out.println("ENABLED SIZE" + stationList.size());
             }
         };
         final Observer<List<Reading>> readingsObserver = new Observer<List<Reading>>() {
             @Override
             public void onChanged(List<Reading> readings) {
                 enabledStationsAdapter.updateReadings(readings);
-                System.out.println("Readings updated " + readings.size() );
             }
         };
         enabledStationViewModel.getReadings().observe(getViewLifecycleOwner(), readingsObserver);

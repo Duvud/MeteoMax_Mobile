@@ -15,13 +15,13 @@
     >
 
         <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="112dp" android:layout_weight="18" android:paddingBottom="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_weight="18" android:paddingBottom="25dp"
                 android:paddingTop="25dp">
             <ImageView
-                    android:layout_width="62dp"
-                    android:layout_height="54dp"
-                    android:layout_margin="20dp"
+                    android:layout_width="42dp"
+                    android:layout_height="39dp"
+                    android:layout_margin="10dp"
                     android:layout_gravity="left|center_vertical"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentRight="false"
@@ -30,12 +30,12 @@
                     tools:srcCompat="@drawable/beacon"/>
             <TextView
                     android:id="@+id/enabledStationTextView"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="-40dp"
+                    android:layout_gravity="clip_horizontal|clip_vertical|center_vertical"
                     android:layout_width="120dp"
                     android:layout_height="35dp"
                     android:baselineAligned="false" android:layout_weight="18"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textAlignment="center"/>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textAlignment="center"
+                    android:layout_marginLeft="60dp"/>
             <TextView
                     android:id="@+id/readingsTextView"
                     android:layout_gravity="center|right"
@@ -46,7 +46,7 @@
                     android:baselineAligned="false" android:layout_weight="18"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" android:autoText="false"
                     android:clickable="false" android:editable="false" android:fontFamily="sans-serif"
-                    android:isScrollContainer="false" android:textSize="14sp" android:layout_marginRight="10dp"
+                    android:isScrollContainer="false" android:textSize="14sp" android:layout_marginRight="60dp"
                     android:layout_marginTop="5dp" android:layout_marginBottom="5dp" android:textAlignment="center"
                     android:foregroundGravity="center_vertical|center|center_horizontal"
                     android:textColor="#efe5fd" android:shadowColor="@color/white"/>

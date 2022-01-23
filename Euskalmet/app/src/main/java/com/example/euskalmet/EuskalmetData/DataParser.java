@@ -105,7 +105,6 @@ public class DataParser {
     public ArrayList parseStationJsonData(JSONObject dataJSONObject) throws JSONException {
         JSONObject rawDataJSONObject = dataJSONObject.
                 getJSONObject((String)dataJSONObject.names().get(0));
-        System.out.println("Raw data \n " + rawDataJSONObject);
         ArrayList<String> lectureTimeArray = new ArrayList<>();
         ArrayList<Double> lectureDataArray = new ArrayList<>();
         for(int z = 0 ; z< rawDataJSONObject.names().length(); z++){
@@ -118,7 +117,6 @@ public class DataParser {
         ArrayList lastDataArrayList = new ArrayList();
         lastDataArrayList.add(lectureTimeArray.get(lectureTimeArray.size()-1));
         lastDataArrayList.add(lectureDataArray.get(lectureDataArray.size()-1));
-        System.out.println(Arrays.toString(lastDataArrayList.toArray()));
         return lastDataArrayList;
     }
 
@@ -158,7 +156,6 @@ public class DataParser {
     public boolean checkEnabled(String stationId) {
         for (int i=0; i<oldStationList.size(); i++) {
             if(oldStationList.get(i).id.equals(stationId)) {
-                System.out.println(oldStationList.get(i).enabled);
                 return oldStationList.get(i).enabled;
             }
         }

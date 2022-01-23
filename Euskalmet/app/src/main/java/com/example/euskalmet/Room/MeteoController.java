@@ -77,7 +77,6 @@ public class MeteoController {
     }
 
     public LiveData<List<Reading>> getLiveStationReadings(String stationID) {
-        System.out.println("Entra en save getLiveReadings");
         HandlerThread getHandlerThread = new HandlerThread("GetReadingsHandlerThread");
         getHandlerThread.start();
         Looper getLooper = getHandlerThread.getLooper();
@@ -95,7 +94,6 @@ public class MeteoController {
     }
 
     public LiveData<List<Reading>> getLivenReadings() {
-        System.out.println("Entra en save getLiveReadings");
         HandlerThread getHandlerThread = new HandlerThread("GetReadingsHandlerThread");
         getHandlerThread.start();
         Looper getLooper = getHandlerThread.getLooper();
@@ -121,7 +119,6 @@ public class MeteoController {
             @Override
             public void run() {
                 readingDAO.insertReadings(readingListList);
-                System.out.println("After inserting readings");
             }
         });
     }
@@ -155,6 +152,7 @@ public class MeteoController {
 
 
     public void changeEnabled(String stationId, Boolean enabled) {
+        System.out.println(stationId + " - " + enabled);
         HandlerThread updateHandlerThread = new HandlerThread("UpdateHandlerThread");
         updateHandlerThread.start();
         Looper updateLooper = updateHandlerThread.getLooper();

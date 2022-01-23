@@ -62,6 +62,7 @@ public class StationListFragment extends Fragment {
         final Observer<List<Station>> stationListObserver = new Observer<List<Station>>() {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
+
                 stationListRecyclerAdapter.updateMessageList(stationList);
             }
         };
