@@ -15,6 +15,9 @@ public interface ReadingDAO {
     @Query("SELECT * FROM reading WHERE stationId = :stationID")
     LiveData<List<Reading>> getLiveStationReadings(String stationID);
 
+    @Query("DELETE FROM reading WHERE stationId = :stationID")
+    void deleteReadingsFromStation(String stationID);
+
     @Query("SELECT * FROM reading")
     LiveData<List<Reading>> getAllLiveReadings();
 

@@ -2,6 +2,7 @@ package com.example.euskalmet.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ public class EnabledStationsFragment extends Fragment {
     private Context mainContext;
     private MeteoController meteoController;
     List<Station> enabledStationList = new ArrayList<>();
-    List<Reading> enabledStationsReadings = new ArrayList<>();
     EnabledStationsAdapter enabledStationsAdapter;
     RecyclerView recyclerView;
 
@@ -68,6 +68,14 @@ public class EnabledStationsFragment extends Fragment {
                 System.out.println("ENABLED SIZE" + stationList.size());
             }
         };
+        final Observer<List<Reading>> readingsObserver = new Observer<List<Reading>>() {
+            @Override
+            public void onChanged(List<Reading> readings) {
+                enabledStationsAdapter.updateReadings(readings);
+                System.out.println("Readings updated " + readings.size() );
+            }
+        };
+        enabledStationViewModel.getReadings().observe(getViewLifecycleOwner(), readingsObserver);
         enabledStationViewModel.getEnabledStations().observe(getViewLifecycleOwner(), enabledStationsObserver);
     }
 }

@@ -4,6 +4,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import com.example.euskalmet.Room.Entity.Reading;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class EnabledStationViewModel extends AndroidViewModel {
     private LiveData<List<Station>> enabledStationList;
+    private LiveData<List<Reading>> stationsReadings;
     private MeteoController meteoController;
 
     public EnabledStationViewModel(@NonNull Application application) {
@@ -33,5 +35,18 @@ public class EnabledStationViewModel extends AndroidViewModel {
             }
         }
         return enabledStationList;
+    }
+
+    public LiveData<List<Reading>> getReadings() {
+        stationsReadings = meteoController.getLivenReadings();
+        if(stationsReadings.getValue() != null && stationsReadings.getValue().size() == 0) {
+            try {
+                Thread.sleep(200);
+                stationsReadings = meteoController.getLivenReadings();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return stationsReadings;
     }
 }

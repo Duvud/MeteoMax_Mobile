@@ -96,6 +96,7 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         if (stationList != null && stationList.get(position) != null && viewHolder.getTextView() != null) {
             viewHolder.getTextView().setText(stationList.get(position).name);
+            viewHolder.getStationSwitch().setChecked(stationList.get(position).enabled);
             viewHolder.getStationSwitch().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -106,6 +107,8 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
                     );
                     if(isChecked){
                         serverRequest.getStationData(stationList.get(viewHolder.getAdapterPosition()).id);
+                    }else{
+                        meteoController.deleteReadingsFromStation(stationList.get(viewHolder.getAdapterPosition()).id);
                     }
                 }
             });

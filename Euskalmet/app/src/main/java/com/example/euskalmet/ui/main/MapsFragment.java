@@ -128,6 +128,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
         if(markerState.get(marker.getTitle()) == true){
             markerState.put(marker.getTitle(), false);
             meteoController.changeEnabled(stationId, false);
+            meteoController.deleteReadingsFromStation(stationId);
             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
         }else if(markerState.get(marker.getTitle()) == false) {

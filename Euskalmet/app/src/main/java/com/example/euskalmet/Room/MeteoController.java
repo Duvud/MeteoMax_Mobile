@@ -76,7 +76,25 @@ public class MeteoController {
         return liveEnabledStations;
     }
 
-    public LiveData<List<Reading>> getLiveReadings(String stationID) {
+    public LiveData<List<Reading>> getLiveStationReadings(String stationID) {
+        System.out.println("Entra en save getLiveReadings");
+        HandlerThread getHandlerThread = new HandlerThread("GetReadingsHandlerThread");
+        getHandlerThread.start();
+        Looper getLooper = getHandlerThread.getLooper();
+        Handler getHandler = new Handler(getLooper);
+        getHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                liveReadingList = readingDAO.getLiveStationReadings(stationID);
+
+            }
+        });
+        while (liveReadingList == null) {
+        }
+        return liveReadingList;
+    }
+
+    public LiveData<List<Reading>> getLivenReadings() {
         System.out.println("Entra en save getLiveReadings");
         HandlerThread getHandlerThread = new HandlerThread("GetReadingsHandlerThread");
         getHandlerThread.start();
@@ -118,6 +136,19 @@ public class MeteoController {
             @Override
             public void run() {
                 stationDAO.insertStations(stationList);
+            }
+        });
+    }
+
+    public void deleteReadingsFromStation(String stationID){
+        HandlerThread insertHandlerThread = new HandlerThread("DeleteHandlerThread");
+        insertHandlerThread.start();
+        Looper insertLooper = insertHandlerThread.getLooper();
+        Handler insertHandler = new Handler(insertLooper);
+        insertHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                readingDAO.deleteReadingsFromStation(stationID);
             }
         });
     }
