@@ -27,6 +27,8 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
     private HashMap<String, Double> temperatureMap;
     private HashMap<String, Double> humidityMap;
     private HashMap<String, Double> speedMap;
+    boolean hasPrep, hasHumidity, hasSpeed, hasTemperature;
+
 
     private View.OnClickListener clickListener;
     private Context context;
@@ -126,37 +128,68 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
 
 
     public void onBindViewHolder(@NonNull EnabledStationsAdapter.ViewHolder viewHolder, int position) {
+        Double precipitation = null, humidity = null, speed = null, temperature = null;
         if (stationList != null && stationList.get(position) != null && viewHolder.getTextView() != null) {
             viewHolder.getTextView().setText(stationList.get(position).name);
+
             String readingsString = "";
             if (precipitationMap != null && precipitationMap.get(stationList.get(position).id) != null) {
                 readingsString +=
                         "Precipitation : " + precipitationMap.get(stationList.get(position).id).toString() + "mm\n" ;
+                hasPrep = true;
+                precipitation = precipitationMap.get(stationList.get(position).id);
             } else {
+                hasPrep = false;
                 readingsString +=  "Precipitation : N/A \n";
             }
 
             if (temperatureMap != null && temperatureMap.get(stationList.get(position).id) != null) {
                 readingsString +=
                                 "Temperature : " + temperatureMap.get(stationList.get(position).id).toString() + "°C\n";
+                hasTemperature = true;
+                temperature = temperatureMap.get(stationList.get(position).id);
             } else {
+                hasTemperature = false;
                 readingsString += "Temperature : N/A \n";
             }
 
             if (humidityMap != null && humidityMap.get(stationList.get(position).id) != null) {
                 readingsString +=
                                 "Humidity : " + humidityMap.get(stationList.get(position).id).toString() + "%\n" ;
+                hasHumidity = true;
+                humidity = humidityMap.get(stationList.get(position).id);
             } else {
+                hasHumidity = false;
                 readingsString += "Humidity : N/A \n";
             }
             if (speedMap != null && speedMap.get(stationList.get(position).id) != null) {
                 readingsString +=
                         "Air speed : " + speedMap.get(stationList.get(position).id).toString() + "km/h" ;
+                hasSpeed = true;
+                speed = speedMap.get(stationList.get(position).id);
             } else {
                 readingsString += "Air speed : N/A ";
+                hasSpeed = false;
             }
             viewHolder.getPrecipitationView().setText(readingsString);
+            setImage(viewHolder, precipitation);
         }
+    }
+
+    public void setImage(@NonNull EnabledStationsAdapter.ViewHolder viewHolder, Double precipitation) {
+        if(precipitation == null){
+            viewHolder.getImageView().setBackgroundResource(R.drawable.error);
+            return;
+        }
+        if(precipitation != null && precipitation == 0){
+            viewHolder.getImageView().setBackgroundResource(R.drawable.sunny);
+            return;
+        }
+        if(precipitation != null && precipitation != 0){
+            viewHolder.getImageView().setBackgroundResource(R.drawable.rain);
+            return;
+        }
+
     }
 
 

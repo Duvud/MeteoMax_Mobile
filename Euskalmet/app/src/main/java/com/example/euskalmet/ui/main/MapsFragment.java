@@ -123,17 +123,19 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        String stationId = stationIDs.get(marker.getTitle());
-        if(markerState.get(marker.getTitle()) == true){
-            markerState.put(marker.getTitle(), false);
-            meteoController.changeEnabled(stationId, false);
-            meteoController.deleteReadingsFromStation(stationId);
-            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-        }else if(markerState.get(marker.getTitle()) == false) {
-            markerState.put(marker.getTitle(), true);
-            meteoController.changeEnabled(stationId, true);
-            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        }
+            String stationId = stationIDs.get(marker.getTitle());
+            if(stationId == null){
+                return;
+            }
+            if(markerState.get(marker.getTitle()) == true){
+                markerState.put(marker.getTitle(), false);
+                meteoController.changeEnabled(stationId, false);
+                meteoController.deleteReadingsFromStation(stationId);
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+            }else if(markerState.get(marker.getTitle()) == false) {
+                markerState.put(marker.getTitle(), true);
+                meteoController.changeEnabled(stationId, true);
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            }
     }
 }
