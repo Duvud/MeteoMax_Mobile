@@ -1,15 +1,15 @@
-package com.example.euskalmet.ui.main;
+package com.example.euskalmet.ui.main.recyclerAdapter;
 
 import android.content.Context;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.euskalmet.R;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.example.euskalmet.ui.main.fragment.EnabledStationsFragment;
+import com.example.euskalmet.ui.main.fragment.MapsFragment;
+import com.example.euskalmet.ui.main.fragment.StationListFragment;
 
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {

@@ -1,4 +1,4 @@
-package com.example.euskalmet.ui.main;
+package com.example.euskalmet.ui.main.fragment;
 
 import android.content.Context;
 import androidx.lifecycle.Observer;
@@ -31,7 +31,7 @@ public class StationListFragment extends Fragment {
     StationListRecyclerAdapter stationListRecyclerAdapter;
     RecyclerView recyclerView;
 
-    StationListFragment(Context mainContext) {
+    public StationListFragment(Context mainContext) {
         this.mainContext = mainContext;
         meteoController = MeteoController.getMeteoController(mainContext);
     }

@@ -11,11 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.euskalmet.EuskalmetData.ServerRequest;
 import com.example.euskalmet.R;
-import com.example.euskalmet.ReadingDataActivity;
+import com.example.euskalmet.Activity.ReadingDataActivity;
 import com.example.euskalmet.Room.Entity.Reading;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.euskalmet;
+package com.example.euskalmet.Activity;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.euskalmet.ui.main.SectionsPagerAdapter;
+import com.example.euskalmet.ui.main.recyclerAdapter.SectionsPagerAdapter;
 import com.example.euskalmet.databinding.ActivityMainBinding;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.euskalmet.ui.main;
+package com.example.euskalmet.ui.main.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -1,7 +1,8 @@
-package com.example.euskalmet;
+package com.example.euskalmet.Activity;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.euskalmet.R;
 import com.example.euskalmet.Room.MeteoController;
 import com.example.euskalmet.databinding.ActivityMainBinding;
 
