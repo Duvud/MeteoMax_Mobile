@@ -36,12 +36,30 @@ public class ServerRequest {
         dataParser = new DataParser(this.mainContext, oldStationList);
     }
 
-    public static ServerRequest getServerRequest(Context context, List<Station> oldStationList, String origin) {
+    public static ServerRequest getServerRequest(Context context, List<Station> oldStationList) {
         if (serverRequest == null) {
-            System.out.println("PRIMERO " + origin  + " "  + oldStationList.size() );
             serverRequest = new ServerRequest(context, oldStationList);
         }
         return serverRequest;
+    }
+
+
+    public void updateReadings(List<Station> stationList){
+        if(stationList != null){
+            for(int i=0; i<stationList.size(); i++){
+                HandlerThread insertHandlerThread = new HandlerThread("getReadingsHandlerThread");
+                insertHandlerThread.start();
+                Looper insertLooper = insertHandlerThread.getLooper();
+                Handler insertHandler = new Handler(insertLooper);
+                int finalI = i;
+                insertHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getStationData(stationList.get(finalI).id);
+                    }
+                });
+            }
+        }
     }
 
     public void getStationData(String stationId) {
@@ -89,6 +107,5 @@ public class ServerRequest {
                 requestQueue.add(request);
             }
         });
-
     }
 }

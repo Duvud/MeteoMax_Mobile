@@ -1,8 +1,11 @@
 package com.example.euskalmet;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import com.example.euskalmet.BackgroundService.UpdateReadingsUtil;
 import com.example.euskalmet.EuskalmetData.ServerRequest;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
@@ -27,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private StationViewModel stationViewModel;
     private EnabledStationViewModel enabledStationViewModel;
     private MeteoController meteoController;
-    private List<Station> stationList;
     private boolean listenInited = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable final List<Station> stationList) {
                 if(!listenInited){
-                    serverRequest = ServerRequest.getServerRequest(MainActivity.this, stationList, "Main Activity");
+                    serverRequest = ServerRequest.getServerRequest(MainActivity.this, stationList);
                     serverRequest.getStationList();
                     listenInited = true;
                     SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(MainActivity.this, getSupportFragmentManager());
@@ -56,6 +59,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         stationViewModel.getStations().observe(this, stationListObserver);
-
+        UpdateReadingsUtil.scheduleJob(getApplicationContext());
     }
 }

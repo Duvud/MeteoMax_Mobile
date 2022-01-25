@@ -9,6 +9,7 @@ import android.os.Looper;
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
+import com.example.euskalmet.EuskalmetData.ServerRequest;
 import com.example.euskalmet.Room.DAO.ReadingDAO;
 import com.example.euskalmet.Room.DAO.StationDAO;
 import com.example.euskalmet.Room.Entity.Reading;
@@ -22,11 +23,14 @@ public class MeteoController {
     private LiveData<List<Station>> liveStationList;
     private LiveData<List<Station>> liveEnabledStations;
     private LiveData<List<Reading>> liveReadingList;
+    private List<Station> stationList;
+    private ServerRequest serverRequest;
     private StationDAO stationDAO;
     private ReadingDAO readingDAO;
+    private Context appContext;
 
     private MeteoController(Context context) {
-        Context appContext = context.getApplicationContext();
+         appContext = context.getApplicationContext();
         MeteoDatabase db = Room.databaseBuilder(
                         appContext,
                         MeteoDatabase.class,
@@ -44,6 +48,21 @@ public class MeteoController {
         return meteoController;
     }
 
+    public void updateReadings() {
+        HandlerThread getHandlerThread = new HandlerThread("UpdateReadingsHandlerThread");
+        getHandlerThread.start();
+        Looper getLooper = getHandlerThread.getLooper();
+        Handler getHandler = new Handler(getLooper);
+        getHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                while (stationList == null){}
+                serverRequest = ServerRequest.getServerRequest(appContext,stationList);
+                serverRequest.updateReadings(stationList);
+            }
+        });
+    }
+
     public LiveData<List<Station>> getLiveStations() {
         HandlerThread getHandlerThread = new HandlerThread("GetHandlerThread");
         getHandlerThread.start();
@@ -52,6 +71,7 @@ public class MeteoController {
         getHandler.post(new Runnable() {
             @Override
             public void run() {
+                stationList = stationDAO.getEnabledStations();
                 liveStationList = stationDAO.getLiveStations();
             }
         });
@@ -85,7 +105,6 @@ public class MeteoController {
             @Override
             public void run() {
                 liveReadingList = readingDAO.getLiveStationReadings(stationID);
-
             }
         });
         while (liveReadingList == null) {
@@ -102,7 +121,6 @@ public class MeteoController {
             @Override
             public void run() {
                 liveReadingList = readingDAO.getAllLiveReadings();
-
             }
         });
         while (liveReadingList == null) {
@@ -152,7 +170,6 @@ public class MeteoController {
 
 
     public void changeEnabled(String stationId, Boolean enabled) {
-        System.out.println(stationId + " - " + enabled);
         HandlerThread updateHandlerThread = new HandlerThread("UpdateHandlerThread");
         updateHandlerThread.start();
         Looper updateLooper = updateHandlerThread.getLooper();

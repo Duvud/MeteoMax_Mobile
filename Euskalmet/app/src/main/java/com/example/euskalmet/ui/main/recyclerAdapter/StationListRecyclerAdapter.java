@@ -33,7 +33,7 @@ public class StationListRecyclerAdapter extends RecyclerView.Adapter<StationList
         meteoController = MeteoController.getMeteoController(context);
         stationList = dataSet;
         this.context = context;
-        this.serverRequest = ServerRequest.getServerRequest(context, stationList , "StationList");
+        this.serverRequest = ServerRequest.getServerRequest(context, stationList);
     }
 
     @Override

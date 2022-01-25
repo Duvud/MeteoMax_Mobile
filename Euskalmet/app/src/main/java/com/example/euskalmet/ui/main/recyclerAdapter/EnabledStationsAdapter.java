@@ -1,6 +1,7 @@
 package com.example.euskalmet.ui.main.recyclerAdapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.euskalmet.EuskalmetData.ServerRequest;
 import com.example.euskalmet.R;
+import com.example.euskalmet.ReadingDataActivity;
 import com.example.euskalmet.Room.Entity.Reading;
 import com.example.euskalmet.Room.Entity.Station;
 import com.example.euskalmet.Room.MeteoController;
@@ -40,7 +42,7 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
         meteoController = MeteoController.getMeteoController(context);
         stationList = dataSet;
         this.context = context;
-        this.serverRequest = ServerRequest.getServerRequest(context, stationList, "EnabledStations");
+        this.serverRequest = ServerRequest.getServerRequest(context, stationList);
     }
 
     @Override
@@ -131,7 +133,16 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
         Double precipitation = null, humidity = null, speed = null, temperature = null;
         if (stationList != null && stationList.get(position) != null && viewHolder.getTextView() != null) {
             viewHolder.getTextView().setText(stationList.get(position).name);
-
+            viewHolder.precipitationView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("Entra en click de texto");
+                    final Intent readingDataActivityIntent;
+                    readingDataActivityIntent =  new Intent(context, ReadingDataActivity.class);
+                    readingDataActivityIntent.putExtra("stationId", stationList.get(viewHolder.getAdapterPosition()).id);
+                    context.startActivity(readingDataActivityIntent);
+                }
+            });
             String readingsString = "";
             if (precipitationMap != null && precipitationMap.get(stationList.get(position).id) != null) {
                 readingsString +=
@@ -189,7 +200,6 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
             viewHolder.getImageView().setBackgroundResource(R.drawable.rain);
             return;
         }
-
     }
 
 

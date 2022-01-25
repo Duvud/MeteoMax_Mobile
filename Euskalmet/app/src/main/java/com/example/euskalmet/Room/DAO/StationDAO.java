@@ -3,9 +3,7 @@ package com.example.euskalmet.Room.DAO;
 import androidx.lifecycle.LiveData;
 import androidx.room.*;
 
-import com.example.euskalmet.Room.Entity.Reading;
 import com.example.euskalmet.Room.Entity.Station;
-import com.example.euskalmet.Room.Entity.StationReadings;
 
 import java.util.List;
 
@@ -13,6 +11,9 @@ import java.util.List;
 public interface StationDAO {
     @Query("SELECT * FROM station")
     LiveData<List<Station>> getLiveStations();
+
+    @Query("SELECT * FROM station WHERE enabled = 1")
+    List<Station> getEnabledStations();
 
     @Query("SELECT * FROM station WHERE enabled = 1")
     LiveData<List<Station>> getEnabledLiveStations();
@@ -25,5 +26,4 @@ public interface StationDAO {
 
     @Query("UPDATE station SET enabled = :enabled WHERE id =:stationID")
     void changeStationEnabled(String stationID, Boolean enabled);
-
 }
