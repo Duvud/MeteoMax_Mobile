@@ -139,6 +139,7 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
                     final Intent readingDataActivityIntent;
                     readingDataActivityIntent =  new Intent(context, ReadingDataActivity.class);
                     readingDataActivityIntent.putExtra("stationId", stationList.get(viewHolder.getAdapterPosition()).id);
+                    readingDataActivityIntent.putExtra("stationName", stationList.get(viewHolder.getAdapterPosition()).name);
                     context.startActivity(readingDataActivityIntent);
                 }
             });

@@ -27,12 +27,7 @@ public class EnabledStationViewModel extends AndroidViewModel {
     public LiveData<List<Station>> getEnabledStations() {
         enabledStationList = meteoController.getEnabledLiveStations();
         if(enabledStationList.getValue() != null && enabledStationList.getValue().size() == 0){
-            try {
-                Thread.sleep(200);
-                enabledStationList = meteoController.getEnabledLiveStations();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            enabledStationList = meteoController.getEnabledLiveStations();
         }
         return enabledStationList;
     }
@@ -40,12 +35,7 @@ public class EnabledStationViewModel extends AndroidViewModel {
     public LiveData<List<Reading>> getReadings() {
         stationsReadings = meteoController.getLivenReadings();
         if(stationsReadings.getValue() != null && stationsReadings.getValue().size() == 0) {
-            try {
-                Thread.sleep(200);
-                stationsReadings = meteoController.getLivenReadings();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            stationsReadings = meteoController.getLivenReadings();
         }
         return stationsReadings;
     }

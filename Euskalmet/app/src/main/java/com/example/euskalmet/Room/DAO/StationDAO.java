@@ -18,7 +18,7 @@ public interface StationDAO {
     @Query("SELECT * FROM station WHERE enabled = 1")
     LiveData<List<Station>> getEnabledLiveStations();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertStations(List<Station> stationList);
 
     @Query("SELECT * FROM station WHERE id = :stationID")

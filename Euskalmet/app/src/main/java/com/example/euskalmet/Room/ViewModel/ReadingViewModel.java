@@ -25,12 +25,7 @@ public class ReadingViewModel extends AndroidViewModel {
     public LiveData<List<Reading>> getStationReadings(String stationID) {
         readingList = meteoController.getLiveStationReadings(stationID);
         if(readingList.getValue() != null && readingList.getValue().size() == 0){
-            try {
-                Thread.sleep(200);
-                readingList = meteoController.getLiveStationReadings(stationID);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            readingList = meteoController.getLiveStationReadings(stationID);
         }
         return readingList;
     }

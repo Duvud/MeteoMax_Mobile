@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.euskalmet.EuskalmetData.ServerRequest;
 import com.example.euskalmet.Location.LocationController;
 import com.example.euskalmet.Location.LocationViewModel;
 import com.example.euskalmet.R;
@@ -29,6 +30,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
     private StationViewModel stationViewModel;
     private LocationViewModel locationViewModel;
     private MeteoController meteoController;
+    private ServerRequest serverRequest;
     private HashMap<String, String> stationIDs = new HashMap<>();
     private HashMap<String, Boolean> markerState = new HashMap<>();
     private MarkerOptions locationMarker;
@@ -73,6 +75,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
     }
 
     public void initViewModel() {
+        serverRequest = ServerRequest.getServerRequest(getActivity(), stationList);
+        serverRequest.getStationList();
         locationController = LocationController.getLocationRequest(getContext());
         meteoController = MeteoController.getMeteoController(getContext());
         locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);

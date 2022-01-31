@@ -32,7 +32,29 @@ public class DataParser {
     public DataParser(String response) {
     }
 
-    public void parseStationData(String stationData, String stationID) {
+    public List<List> parseDayStationData(String stationData, String stationID, String dataType) {
+                byte[] byteData = stationData.getBytes(ISO_8859_1);
+                String stationUtf8Data = new String(byteData, UTF_8);
+                List<List> encapsulatedDataArray = new ArrayList<>();
+                try {
+                    JSONObject stationJsonObject = new JSONObject(stationUtf8Data);
+                    for(int i=0; i<stationJsonObject.names().length(); i++) {
+                        String dataSectionType = stationJsonObject.
+                                getJSONObject((String) stationJsonObject.names().get(i))
+                                .getString("name");
+                        JSONObject dataJSONObject = stationJsonObject.
+                                getJSONObject((String) stationJsonObject.names().get(i)).getJSONObject("data");
+                        if(dataSectionType.equals(dataType)){
+                            encapsulatedDataArray = parseStationDayData(dataJSONObject);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+        return encapsulatedDataArray;
+    }
+
+    public void parseLastStationData(String stationData, String stationID) {
         HandlerThread handlerThread = new HandlerThread("ParseStationDataHandlerThread");
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -61,7 +83,7 @@ public class DataParser {
                                 newReading.readingType = "temperature";
                                 newReading.readingId = stationID+"T";
                                 readingList.add(newReading);
-                            break;
+                                break;
                             case "precipitation":
                                 ArrayList lastPrecipitationArray = parseStationJsonData(dataJSONObject);
                                 Reading precipitationReading = new Reading();
@@ -102,6 +124,24 @@ public class DataParser {
         });
     }
 
+    public ArrayList parseStationDayData(JSONObject dataJSONObject) throws JSONException {
+        JSONObject rawDataJSONObject = dataJSONObject.
+                getJSONObject((String)dataJSONObject.names().get(0));
+        ArrayList<String> lectureTimeArray = new ArrayList<>();
+        ArrayList<Double> lectureDataArray = new ArrayList<>();
+        for(int z = 0 ; z< rawDataJSONObject.names().length(); z++){
+            lectureTimeArray.add((String) rawDataJSONObject.names().get(z));
+        }
+        Collections.sort(lectureTimeArray);
+        for(int z = 0 ; z < lectureTimeArray.size() ; z++) {
+            lectureDataArray.add(rawDataJSONObject.getDouble(lectureTimeArray.get(z)));
+        }
+        ArrayList encapsulationArray = new ArrayList();
+        encapsulationArray.add(lectureTimeArray);
+        encapsulationArray.add(lectureDataArray);
+        return encapsulationArray;
+    }
+
     public ArrayList parseStationJsonData(JSONObject dataJSONObject) throws JSONException {
         JSONObject rawDataJSONObject = dataJSONObject.
                 getJSONObject((String)dataJSONObject.names().get(0));
@@ -133,7 +173,7 @@ public class DataParser {
                     stationJsonArray = new JSONArray(stationListText);
                     for(int i=0; i<stationJsonArray.length(); i++) {
                         JSONObject stationJsonObject = stationJsonArray.getJSONObject(i);
-                        if(stationJsonObject.getString("stationType").equals("METEOROLOGICAL")){
+                        if(stationJsonObject.getString("stationType").equals("METEOROLOGICAL") && checkExists(stationJsonObject.getString("id"))){
                             Station newStation = new Station();
                             newStation.id = stationJsonObject.getString("id");
                             newStation.name = stationJsonObject.getString("name");
@@ -141,7 +181,7 @@ public class DataParser {
                             newStation.x = stationJsonObject.getDouble("x");
                             newStation.y = stationJsonObject.getDouble("y");
                             newStation.municipality = stationJsonObject.getString("municipality");
-                            newStation.enabled = checkEnabled(newStation.id);
+                            newStation.enabled = false;
                             stationArrayList.add(newStation);
                         }
                     }
@@ -153,10 +193,13 @@ public class DataParser {
         });
     }
 
-    public boolean checkEnabled(String stationId) {
+    public boolean checkExists(String stationId) {
+        if(oldStationList == null){
+            return false;
+        }
         for (int i=0; i<oldStationList.size(); i++) {
             if(oldStationList.get(i).id.equals(stationId)) {
-                return oldStationList.get(i).enabled;
+                return true;
             }
         }
         return false;

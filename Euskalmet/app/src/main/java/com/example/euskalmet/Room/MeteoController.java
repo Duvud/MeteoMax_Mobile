@@ -30,7 +30,7 @@ public class MeteoController {
     private Context appContext;
 
     private MeteoController(Context context) {
-         appContext = context.getApplicationContext();
+        appContext = context.getApplicationContext();
         MeteoDatabase db = Room.databaseBuilder(
                         appContext,
                         MeteoDatabase.class,
@@ -56,8 +56,9 @@ public class MeteoController {
         getHandler.post(new Runnable() {
             @Override
             public void run() {
-                while (stationList == null){}
-                serverRequest = ServerRequest.getServerRequest(appContext,stationList);
+                while (stationList == null) {
+                }
+                serverRequest = ServerRequest.getServerRequest(appContext, stationList);
                 serverRequest.updateReadings(stationList);
             }
         });
@@ -78,6 +79,12 @@ public class MeteoController {
         while (liveStationList == null) {
         }
         return liveStationList;
+    }
+
+    public List<List> getDateReadings(String date, String stationd, String dataType) {
+        serverRequest = ServerRequest.getServerRequest(appContext, stationList);
+        List dateReadings =  serverRequest.getDateReadings(date, stationd, dataType);
+        return dateReadings;
     }
 
     public LiveData<List<Station>> getEnabledLiveStations() {
@@ -155,7 +162,7 @@ public class MeteoController {
         });
     }
 
-    public void deleteReadingsFromStation(String stationID){
+    public void deleteReadingsFromStation(String stationID) {
         HandlerThread insertHandlerThread = new HandlerThread("DeleteHandlerThread");
         insertHandlerThread.start();
         Looper insertLooper = insertHandlerThread.getLooper();
@@ -177,7 +184,7 @@ public class MeteoController {
         insertHandler.post(new Runnable() {
             @Override
             public void run() {
-                stationDAO.changeStationEnabled(stationId,enabled);
+                stationDAO.changeStationEnabled(stationId, enabled);
             }
         });
     }
