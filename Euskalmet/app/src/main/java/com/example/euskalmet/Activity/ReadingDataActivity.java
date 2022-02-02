@@ -109,7 +109,7 @@ public class ReadingDataActivity extends AppCompatActivity {
 
                 if (currentDate.compareTo(dateRepresentation) >= 0) {
                     calendar.setTime(new Date(year, month, day));
-                    selectedDate = year + "/" + (month <= 10 ? "0" + (month + 1) : month + 1) + "/" + day;
+                    selectedDate = year + "/" + (month <= 10 ? "0" + (month + 1) : month + 1) + "/" + (day <= 10 ? "0" + day : day);
                     readingDateText.setText(selectedDate);
                     getDayReadings(selectedDate);
                 } else {
@@ -139,6 +139,7 @@ public class ReadingDataActivity extends AppCompatActivity {
                 double totalValue = 0;
                 dateReadingList = new ArrayList<>();
                 mChart = findViewById(R.id.chart);
+
                 mChart.setTouchEnabled(true);
                 mChart.setPinchZoom(true);
                 List<List> dataLists = meteoController.getDateReadings(dateString, stationId, categorySpinner.getSelectedItem().toString());
@@ -162,12 +163,14 @@ public class ReadingDataActivity extends AppCompatActivity {
                         mChart.getData().getDataSetCount() > 0) {
                     set1 = (LineDataSet) mChart.getData().getDataSetByIndex(0);
                     set1.setValues(chartValues);
+                    set1.setLabel(categorySpinner.getSelectedItem().toString());
                     mChart.setData(data);
                     mChart.getData().notifyDataChanged();
                     mChart.notifyDataSetChanged();
                     mChart.invalidate();
+                    mChart.getDescription().setText(categorySpinner.getSelectedItem().toString() + " along the day");
                 } else {
-                    set1 = new LineDataSet(chartValues, "Temperatura");
+                    set1 = new LineDataSet(chartValues, categorySpinner.getSelectedItem().toString());
                     set1.setDrawIcons(false);
                     set1.enableDashedLine(10f, 5f, 0f);
                     set1.enableDashedHighlightLine(10f, 5f, 0f);
@@ -187,6 +190,7 @@ public class ReadingDataActivity extends AppCompatActivity {
                     data = new LineData(dataSets);
                     mChart.setData(data);
                     mChart.invalidate();
+                    mChart.getDescription().setText(categorySpinner.getSelectedItem().toString() + " along the day");
                 }
             }
         });
@@ -196,7 +200,7 @@ public class ReadingDataActivity extends AppCompatActivity {
         currentDate = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
         currentDate.setTime(new Date());
         final String initialDateText = currentDate.get(Calendar.YEAR) + "/" + (currentDate.get(Calendar.MONTH + 1) < 10 ? "0" + (currentDate.get(Calendar.MONTH) + 1) :
-                (currentDate.get(Calendar.MONTH) + 1))+ "/" + (currentDate.get(Calendar.DAY_OF_MONTH));
+                (currentDate.get(Calendar.MONTH) + 1))+ "/" + (currentDate.get(Calendar.DATE) < 10 ? "0" + (currentDate.get(Calendar.DATE)) : (currentDate.get(Calendar.DATE)));
         selectedDate = initialDateText;
         readingDateText.setText(initialDateText);
         getDayReadings(initialDateText);
