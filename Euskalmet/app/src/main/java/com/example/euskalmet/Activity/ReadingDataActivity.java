@@ -105,7 +105,6 @@ public class ReadingDataActivity extends AppCompatActivity {
                 cal.set(Calendar.MONTH, month);
                 cal.set(Calendar.DAY_OF_MONTH, day);
                 Date dateRepresentation = cal.getTime();
-                System.out.println(currentDate.compareTo(dateRepresentation));
 
                 if (currentDate.compareTo(dateRepresentation) >= 0) {
                     calendar.setTime(new Date(year, month, day));
@@ -151,8 +150,6 @@ public class ReadingDataActivity extends AppCompatActivity {
                     newReading.readingDateTime = (String) dataLists.get(0).get(i);
                     newReading.stationId = stationId;
                     dateReadingList.add(newReading);
-                    System.out.println(newReading.readingDateTime);
-                    System.out.println(newReading.readingDateTime.substring(0, 2) + '.' + newReading.readingDateTime.substring(3, 5));
                     chartValues.add(new Entry(Float.parseFloat(newReading.readingDateTime.substring(0, 2) + '.' + newReading.readingDateTime.substring(3, 5)), (float) newReading.readingData));
                     totalValue += newReading.readingData;
                 }

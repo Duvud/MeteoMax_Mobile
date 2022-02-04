@@ -87,6 +87,7 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
         this.readingList = readingList;
         loadReadings(readingList);
         notifyDataSetChanged();
+        //notifyAll();
     }
 
     public void loadReadings(List<Reading> readingList) {
@@ -135,7 +136,6 @@ public class EnabledStationsAdapter extends RecyclerView.Adapter<EnabledStations
             viewHolder.precipitationView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println("Entra en click de texto");
                     final Intent readingDataActivityIntent;
                     readingDataActivityIntent =  new Intent(context, ReadingDataActivity.class);
                     readingDataActivityIntent.putExtra("stationId", stationList.get(viewHolder.getAdapterPosition()).id);

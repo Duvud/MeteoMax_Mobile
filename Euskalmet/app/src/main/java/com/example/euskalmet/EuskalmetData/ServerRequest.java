@@ -73,7 +73,8 @@ public class ServerRequest {
         String month =
                 String.valueOf(cal.get(Calendar.MONTH) + 1).length() == 1 ?
                         "0" + (cal.get(Calendar.MONTH) + 1) : String.valueOf(cal.get(Calendar.MONTH) + 1);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
+        String day = cal.get(Calendar.DATE) < 10 ?
+                "0" + (cal.get(Calendar.DATE)) : String.valueOf(cal.get(Calendar.DATE));
         String stationDataUrl = String.format("https://euskalmet.euskadi.eus/vamet/stations/readings/%s/%s/%s/%s/readingsData.json", stationId, year, month, day);
         request = new StringRequest(Request.Method.GET, stationDataUrl, new Response.Listener<String>() {
             @Override
@@ -82,8 +83,6 @@ public class ServerRequest {
             }
         }, new ErrorListener());
         requestQueue.add(request);
-
-
     }
 
     public void getStationList() {

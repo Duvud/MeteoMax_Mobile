@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private MeteoController meteoController;
     private boolean listenInited = false;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         stationViewModel.getStations().observe(this, stationListObserver);
-        UpdateReadingsUtil.scheduleJob(getApplicationContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            UpdateReadingsUtil.scheduleJob(getApplicationContext());
+        }
     }
 }

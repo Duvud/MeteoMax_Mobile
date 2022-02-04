@@ -117,6 +117,7 @@ public class DataParser {
                         }
                     }
                     meteoController.saveReadings(readingList);
+                    System.out.println("Reading list " + readingList.size() + " aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -162,6 +163,7 @@ public class DataParser {
 
     public void parseStationList(String stationList) {
         HandlerThread handlerThread = new HandlerThread("ParseStationListHandlerThread");
+
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         Handler handler = new Handler(looper);
@@ -170,10 +172,10 @@ public class DataParser {
             public void run() {
                 DataParser.this.stationListText = stationList;
                 try {
-                    stationJsonArray = new JSONArray(stationListText);
+                    stationJsonArray = new JSONArray(stationList);
                     for(int i=0; i<stationJsonArray.length(); i++) {
                         JSONObject stationJsonObject = stationJsonArray.getJSONObject(i);
-                        if(stationJsonObject.getString("stationType").equals("METEOROLOGICAL") && checkExists(stationJsonObject.getString("id"))){
+                        if(stationJsonObject.getString("stationType").equals("METEOROLOGICAL")){
                             Station newStation = new Station();
                             newStation.id = stationJsonObject.getString("id");
                             newStation.name = stationJsonObject.getString("name");

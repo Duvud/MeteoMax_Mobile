@@ -72,7 +72,8 @@ public class EnabledStationsFragment extends Fragment {
                 enabledStationsAdapter.updateReadings(readings);
             }
         };
-        enabledStationViewModel.getReadings().observe(getViewLifecycleOwner(), readingsObserver);
         enabledStationViewModel.getEnabledStations().observe(getViewLifecycleOwner(), enabledStationsObserver);
+        enabledStationViewModel.getReadings().observe(getViewLifecycleOwner(), readingsObserver);
+
     }
 }
